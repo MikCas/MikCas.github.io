@@ -18,9 +18,6 @@ export function createGridScene(canvas) {
     0.1,
     1000
   );
-  camera.position.set(0, 8, 12);
-  camera.lookAt(0, 0, 0);
-
   // Shader uniforms
   const uniforms = {
     uPlaneMode:    { value: 2 },       // ZX (top-down floor)
@@ -70,6 +67,43 @@ export function createGridScene(canvas) {
   }
   animate();
 
-  // Return handles for mouse controls (Task 5)
+  // Mouse orbit — drag to rotate camera around the origin
+  let isDragging = false;
+  let prevMouse = { x: 0, y: 0 };
+  // Spherical coordinates for camera position
+  let spherical = { radius: 15, theta: Math.PI / 4, phi: Math.PI / 3 };
+
+  function updateCameraFromSpherical() {
+    camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+    camera.position.y = spherical.radius * Math.cos(spherical.phi);
+    camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+    camera.lookAt(0, 0, 0);
+  }
+  updateCameraFromSpherical();
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    prevMouse = { x: e.clientX, y: e.clientY };
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - prevMouse.x;
+    const dy = e.clientY - prevMouse.y;
+    prevMouse = { x: e.clientX, y: e.clientY };
+
+    spherical.theta -= dx * 0.005;
+    spherical.phi = Math.max(0.1, Math.min(Math.PI / 2 - 0.01, spherical.phi - dy * 0.005));
+    updateCameraFromSpherical();
+  });
+
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    spherical.radius = Math.max(5, Math.min(50, spherical.radius + e.deltaY * 0.05));
+    updateCameraFromSpherical();
+  }, { passive: false });
+
   return { renderer, scene, camera, uniforms };
 }
