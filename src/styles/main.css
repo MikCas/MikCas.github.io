@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -7,6 +9,8 @@
 body {
   overflow: hidden;
   background: #000;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #e0e0e0;
 }
 
 #bg-canvas {
@@ -18,7 +22,43 @@ body {
   z-index: 0;
 }
 
+/* Content layer */
 #content {
   position: relative;
   z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Let clicks pass through to canvas */
+}
+
+/* Glass panel base style */
+.panel {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 2rem 3rem;
+  pointer-events: auto; /* Re-enable clicks on panels */
+}
+
+/* Hero panel */
+#hero-panel {
+  text-align: center;
+}
+
+#hero-panel h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+#hero-panel .subtitle {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
 }
