@@ -6,30 +6,122 @@
   <title>Mikhail Cassar</title>
 </head>
 <body>
-  <canvas id="bg-canvas"></canvas>
-  <div id="content">
-    <header class="panel" id="hero-panel">
-      <h1>Mikhail Cassar</h1>
-      <p class="subtitle">Creative Technologist</p>
+  <!-- App-like UI shell -->
+  <div id="app">
+
+    <!-- Menu bar -->
+    <header id="menubar">
+      <span class="menu-item active">Portfolio</span>
+      <span class="menu-item">About</span>
+      <span class="menu-item">Projects</span>
+      <span class="menu-item">Contact</span>
     </header>
-    <section class="panel" id="about-panel">
-      <h2>About</h2>
-      <p>Short bio goes here — skills, background, what you do.</p>
-    </section>
-    <section class="panel" id="projects-panel">
-      <h2>Projects</h2>
-      <div class="project-card">
-        <h3>Project Title</h3>
-        <p>Short description of the project.</p>
-        <a href="#">View Project</a>
+
+    <!-- Main area: toolbar + viewport -->
+    <div id="main">
+
+      <!-- Left toolbar -->
+      <nav id="toolbar">
+        <button class="tool-btn active" title="Orbit">
+          <span class="tool-icon">&#x21BB;</span>
+        </button>
+        <button class="tool-btn" title="Zoom">
+          <span class="tool-icon">&#x2922;</span>
+        </button>
+        <button class="tool-btn" title="Pan">
+          <span class="tool-icon">&#x2725;</span>
+        </button>
+        <div class="tool-separator"></div>
+        <button class="tool-btn" title="Grid Settings">
+          <span class="tool-icon">&#x2630;</span>
+        </button>
+        <button class="tool-btn" title="Reset View">
+          <span class="tool-icon">&#x2302;</span>
+        </button>
+      </nav>
+
+      <!-- Viewport (3D grid fills this area) -->
+      <div id="viewport">
+        <div id="viewport-label">Perspective</div>
+        <canvas id="bg-canvas"></canvas>
       </div>
-    </section>
-    <nav class="panel" id="contact-panel">
-      <a href="mailto:your@email.com">Email</a>
-      <a href="https://github.com/mikhailcassar">GitHub</a>
-      <a href="https://linkedin.com/in/mikhailcassar">LinkedIn</a>
-    </nav>
+
+      <!-- Right panel (shader parameters) -->
+      <aside id="panel">
+        <div class="panel-section">
+          <div class="panel-header">Grid</div>
+          <div class="panel-body">
+            <label class="param">
+              <span class="param-label">Cell Size</span>
+              <input type="range" min="0.5" max="5" step="0.1" value="1.0" data-uniform="uCellSize" />
+              <span class="param-value">1.0</span>
+            </label>
+            <label class="param">
+              <span class="param-label">Subdivisions</span>
+              <input type="range" min="1" max="10" step="1" value="4" data-uniform="uSubdivisions" />
+              <span class="param-value">4</span>
+            </label>
+            <label class="param">
+              <span class="param-label">Fade Distance</span>
+              <input type="range" min="10" max="100" step="1" value="50" data-uniform="uFadeDistance" />
+              <span class="param-value">50</span>
+            </label>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="panel-header">Lines</div>
+          <div class="panel-body">
+            <label class="param">
+              <span class="param-label">Max Width</span>
+              <input type="range" min="0.01" max="0.2" step="0.005" value="0.05" data-uniform="uMaxLineWidth" />
+              <span class="param-value">0.05</span>
+            </label>
+            <label class="param">
+              <span class="param-label">Minor Width</span>
+              <input type="range" min="0.001" max="0.1" step="0.001" value="0.02" data-uniform="uMinWidth" />
+              <span class="param-value">0.02</span>
+            </label>
+            <label class="param">
+              <span class="param-label">Major Width</span>
+              <input type="range" min="0.001" max="0.1" step="0.001" value="0.04" data-uniform="uMajWidth" />
+              <span class="param-value">0.04</span>
+            </label>
+            <label class="param">
+              <span class="param-label">Axis Width</span>
+              <input type="range" min="0.001" max="0.2" step="0.001" value="0.06" data-uniform="uAxisWidth" />
+              <span class="param-value">0.06</span>
+            </label>
+            <label class="param">
+              <span class="param-label">Minor Opacity</span>
+              <input type="range" min="0" max="1" step="0.05" value="0.6" data-uniform="uMinOpacity" />
+              <span class="param-value">0.6</span>
+            </label>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="panel-header">View</div>
+          <div class="panel-body">
+            <label class="param">
+              <span class="param-label">Plane</span>
+              <select data-uniform="uPlaneMode">
+                <option value="0">XY (Front)</option>
+                <option value="1">YZ (Right)</option>
+                <option value="2" selected>ZX (Top)</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Status bar -->
+    <footer id="statusbar">
+      <span class="status-item" id="status-coords">X 0.000  Y 0.000  Z 0.000</span>
+    </footer>
+
   </div>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

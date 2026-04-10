@@ -1,6 +1,10 @@
 // Pristine Infinite Grid Shader — ported from TouchDesigner
 // Based on: https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
 
+#ifdef GL_OES_standard_derivatives
+#extension GL_OES_standard_derivatives : enable
+#endif
+
 // GRID
 uniform int   uPlaneMode;    // Grid plane: 0 = XY (Front), 1 = YZ (Right), 2 = ZX (Top)
 uniform float uCellSize;     // World-space size of one major grid cell

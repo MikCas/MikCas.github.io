@@ -1,9 +1,9 @@
 import glsl from 'vite-plugin-glsl';
 import { defineConfig } from 'vite';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [glsl()],
-  // If deploying to username.github.io/portfolio, set base: '/portfolio/'
-  // If deploying to username.github.io (user site), remove this line
-  base: '/portfolio/',
-});
+  // Only set base path for production builds (GitHub Pages)
+  // Dev server always uses '/' so localhost:5173 works normally
+  base: command === 'build' ? '/portfolio/' : '/',
+}));

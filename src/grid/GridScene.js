@@ -3,10 +3,12 @@ import vertexShader from './grid.vert.glsl';
 import fragmentShader from './grid.frag.glsl';
 
 export function createGridScene(canvas) {
-  // Renderer
+  const container = canvas.parentElement;
+
+  // Renderer — sized to container, not full window
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(container.clientWidth, container.clientHeight);
 
   // Scene
   const scene = new THREE.Scene();
@@ -14,7 +16,7 @@ export function createGridScene(canvas) {
   // Camera — perspective, looking down at the grid
   const camera = new THREE.PerspectiveCamera(
     60,
-    window.innerWidth / window.innerHeight,
+    container.clientWidth / container.clientHeight,
     0.1,
     1000
   );
@@ -27,14 +29,14 @@ export function createGridScene(canvas) {
     uMinWidth:     { value: 0.02 },
     uMajWidth:     { value: 0.04 },
     uAxisWidth:    { value: 0.06 },
-    uMinColor:     { value: new THREE.Vector4(0.2, 0.2, 0.2, 1.0) },
-    uMajColor:     { value: new THREE.Vector4(0.4, 0.4, 0.4, 1.0) },
-    uBgColor:      { value: new THREE.Vector4(0.0, 0.0, 0.0, 1.0) },
-    uMinOpacity:   { value: 0.5 },
+    uMinColor:     { value: new THREE.Vector4(0.75, 0.75, 0.75, 1.0) },
+    uMajColor:     { value: new THREE.Vector4(0.6, 0.6, 0.6, 1.0) },
+    uBgColor:      { value: new THREE.Vector4(0.92, 0.92, 0.92, 1.0) },
+    uMinOpacity:   { value: 0.6 },
     uFadeDistance:  { value: 50.0 },
-    uColorX:       { value: new THREE.Vector4(1.0, 0.0, 0.0, 1.0) },
-    uColorY:       { value: new THREE.Vector4(0.0, 1.0, 0.0, 1.0) },
-    uColorZ:       { value: new THREE.Vector4(0.0, 0.0, 1.0, 1.0) },
+    uColorX:       { value: new THREE.Vector4(0.8, 0.2, 0.2, 1.0) },
+    uColorY:       { value: new THREE.Vector4(0.2, 0.7, 0.2, 1.0) },
+    uColorZ:       { value: new THREE.Vector4(0.2, 0.2, 0.8, 1.0) },
   };
 
   // Grid mesh — large flat plane with custom shader
@@ -52,11 +54,11 @@ export function createGridScene(canvas) {
   const gridMesh = new THREE.Mesh(geometry, material);
   scene.add(gridMesh);
 
-  // Resize handler
+  // Resize handler — match container size
   function onResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(container.clientWidth, container.clientHeight);
   }
   window.addEventListener('resize', onResize);
 
@@ -66,6 +68,9 @@ export function createGridScene(canvas) {
     renderer.render(scene, camera);
   }
   animate();
+
+  // Accessibility: skip mouse controls if user prefers reduced motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Mouse orbit — drag to rotate camera around the origin
   let isDragging = false;
@@ -81,29 +86,31 @@ export function createGridScene(canvas) {
   }
   updateCameraFromSpherical();
 
-  canvas.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    prevMouse = { x: e.clientX, y: e.clientY };
-  });
+  if (!prefersReducedMotion) {
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      prevMouse = { x: e.clientX, y: e.clientY };
+    });
 
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const dx = e.clientX - prevMouse.x;
-    const dy = e.clientY - prevMouse.y;
-    prevMouse = { x: e.clientX, y: e.clientY };
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - prevMouse.x;
+      const dy = e.clientY - prevMouse.y;
+      prevMouse = { x: e.clientX, y: e.clientY };
 
-    spherical.theta -= dx * 0.005;
-    spherical.phi = Math.max(0.1, Math.min(Math.PI / 2 - 0.01, spherical.phi - dy * 0.005));
-    updateCameraFromSpherical();
-  });
+      spherical.theta -= dx * 0.005;
+      spherical.phi = Math.max(0.1, Math.min(Math.PI / 2 - 0.01, spherical.phi - dy * 0.005));
+      updateCameraFromSpherical();
+    });
 
-  window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mouseup', () => { isDragging = false; });
 
-  canvas.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    spherical.radius = Math.max(5, Math.min(50, spherical.radius + e.deltaY * 0.05));
-    updateCameraFromSpherical();
-  }, { passive: false });
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      spherical.radius = Math.max(5, Math.min(50, spherical.radius + e.deltaY * 0.05));
+      updateCameraFromSpherical();
+    }, { passive: false });
+  }
 
   return { renderer, scene, camera, uniforms };
 }
