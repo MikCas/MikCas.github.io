@@ -5,5 +5,6 @@ export default defineConfig(({ command }) => ({
   plugins: [glsl()],
   // Only set base path for production builds (GitHub Pages)
   // Dev server always uses '/' so localhost:5173 works normally
-  base: command === 'build' ? '/portfolio/' : '/',
+  // User site (MikCas.github.io) — no subpath needed
+  base: '/',
 }));
