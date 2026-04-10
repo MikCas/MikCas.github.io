@@ -1,3 +1,5 @@
 import './styles/main.css';
+import { createGridScene } from './grid/GridScene.js';
 
-console.log('Portfolio app loaded');
+const canvas = document.getElementById('bg-canvas');
+createGridScene(canvas);
