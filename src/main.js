@@ -1,60 +1,89 @@
-import './style.css'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.js'
+import './style.css';
+import vsSrc from './grid.vert.glsl?raw';
+import fsSrc from './grid.frag.glsl?raw';
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src=${viteLogo} class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+// Context allocation
+const canvas = document.getElementById('grid');
+const gl = canvas.getContext('webgl', { alpha: false });
+if (!gl) throw new Error('WebGL not supported');
 
-<div class="ticks"></div>
+// Hardware extensions
+gl.getExtension('OES_standard_derivatives');
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src=${viteLogo} alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+// Shader compilation
+function compileKernel(source, type) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw new Error('Compile error: ' + gl.getShaderInfoLog(shader));
+  }
+  return shader;
+}
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+// Linker
+const prog = gl.createProgram();
+gl.attachShader(prog, compileKernel(vsSrc, gl.VERTEX_SHADER));
+gl.attachShader(prog, compileKernel(fsSrc, gl.FRAGMENT_SHADER));
+gl.linkProgram(prog);
+gl.useProgram(prog);
 
-setupCounter(document.querySelector('#counter'))
+// VRAM allocation
+const vbo = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+
+// Vertex mapping
+const aPos = gl.getAttribLocation(prog, 'aPos');
+gl.enableVertexAttribArray(aPos);
+gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+// Uniform mapping
+const u = {};
+const uniformNames = [
+  'uRes','uCell','uSub','uMaxLW','uMinW','uMajW',
+  'uAxW','uMinO','uFade','uBg','uMinC','uMajC','uAXC','uAYC','uOff'
+];
+uniformNames.forEach(name => {
+  u[name] = gl.getUniformLocation(prog, name);
+});
+
+// Type conversion
+const hex = (h) => [
+  parseInt(h.slice(1,3), 16) / 255,
+  parseInt(h.slice(3,5), 16) / 255,
+  parseInt(h.slice(5,7), 16) / 255
+];
+
+// Render loop
+function render() {
+  // Resolution sync
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+
+  // State upload
+  gl.uniform2f(u.uRes, canvas.width, canvas.height);
+  gl.uniform1f(u.uCell, 80);
+  gl.uniform1f(u.uSub, 4);
+  gl.uniform1f(u.uMaxLW, 0.04);
+  gl.uniform1f(u.uMinW, 0.3);
+  gl.uniform1f(u.uMajW, 0.5);
+  gl.uniform1f(u.uAxW, 0.6);
+  gl.uniform1f(u.uMinO, 0.4);
+  gl.uniform1f(u.uFade, 9999.0);
+  gl.uniform3fv(u.uBg, hex('#c8c8c8'));
+  gl.uniform3fv(u.uMinC, hex('#999999'));
+  gl.uniform3fv(u.uMajC, hex('#666666'));
+  gl.uniform3fv(u.uAXC, hex('#cc4444'));
+  gl.uniform3fv(u.uAYC, hex('#44aa44'));
+  gl.uniform2f(u.uOff, 0, 0);
+
+  // Execution
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  
+  // Loop scheduling
+  requestAnimationFrame(render);
+}
+
+render();
