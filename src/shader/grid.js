@@ -1,0 +1,74 @@
+import vsSrc from './grid.vert.glsl?raw';
+import fsSrc from './grid.frag.glsl?raw';
+
+export function initGrid(canvas, getParams) {
+    
+    // SETUP GLSL CONTEXT
+    const gl = canvas.getContext('webgl', { alpha: false });
+    if (!gl) throw new Error('WebGL not supported');
+    gl.getExtension('OES_standard_derivatives'); // Using derivatives for antialiasing
+
+    function compileKernel(source, type) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            throw new Error('Compile error: ' + gl.getShaderInfoLog(shader));
+        }
+        return shader;
+    }
+
+    // LINK SHADERS
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compileKernel(vsSrc, gl.VERTEX_SHADER));
+    gl.attachShader(prog, compileKernel(fsSrc, gl.FRAGMENT_SHADER));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    // BUFFERS
+    const vbo = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+
+    // VERTEX
+    const aPos = gl.getAttribLocation(prog, 'aPos');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    // UNIFORMS
+    const u = {};
+    const uniformNames = [
+        'uRes','uCell','uSub','uMaxLW','uMinW','uMajW',
+        'uAxW','uMinO','uFade','uBg','uMinC','uMajC','uAXC','uAYC','uOff'
+    ];
+    uniformNames.forEach(name => {
+        u[name] = gl.getUniformLocation(prog, name);
+    });
+
+    function render() {
+        // Resolution sync
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+
+        const p = getParams();
+        gl.uniform2f (u.uRes,   canvas.width, canvas.height);
+        gl.uniform1f (u.uCell,  p.cell);
+        gl.uniform1f (u.uSub,   p.sub);
+        gl.uniform1f (u.uMaxLW, p.maxLW);
+        gl.uniform1f (u.uMinW,  p.minW);
+        gl.uniform1f (u.uMajW,  p.majW);
+        gl.uniform1f (u.uAxW,   p.axW);
+        gl.uniform1f (u.uMinO,  p.minO);
+        gl.uniform1f (u.uFade,  p.fade);
+        gl.uniform3fv(u.uBg,    p.bg);
+        gl.uniform3fv(u.uMinC,  p.minC);
+        gl.uniform3fv(u.uMajC,  p.majC);
+        gl.uniform3fv(u.uAXC,   p.aXC);
+        gl.uniform3fv(u.uAYC,   p.aYC);
+        gl.uniform2f (u.uOff,   p.off[0], p.off[1]);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        requestAnimationFrame(render);
+    } 
+    render();
+}
