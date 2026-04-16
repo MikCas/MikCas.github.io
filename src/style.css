@@ -1,6 +1,19 @@
 /* RESET */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* TYPOGRAPHY */
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.04em;
+}
+
 /* LAYOUT */
 canvas#grid {
   position: fixed;
@@ -41,6 +54,7 @@ main ul {
 }
 
 main a { 
+  font-family: monospace;
   color: #1a1a1a;
   text-decoration: none;
   font-weight: 500;
