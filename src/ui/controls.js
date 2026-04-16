@@ -1,4 +1,4 @@
-// src/ui/controls.js
+import './controls.css';
 
 const CONTROLS_HTML = `
 <details id="controls" open>
