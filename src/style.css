@@ -26,6 +26,13 @@ h1 {
   letter-spacing: -0.04em;
 }
 
+h2 {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.04em; /* Matches your name! */
+}
+
 /* LAYOUT */
 canvas#grid {
   position: fixed;
