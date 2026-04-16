@@ -1,10 +1,22 @@
+/* VARIABLES*/
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-accent: #000000;
+  --color-muted: #555555;
+  
+  --font-main: 'Inter', sans-serif;
+  --font-mono: monospace;
+}
+
 /* RESET */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 /* TYPOGRAPHY */
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
+  color: var(--color-text);
 }
 
 h1 {
@@ -17,10 +29,8 @@ h1 {
 /* LAYOUT */
 canvas#grid {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   z-index: 0;
 }
 
@@ -29,33 +39,27 @@ main {
   z-index: 1;
   max-width: 560px;
   margin: 0;
-  padding: 2rem 2rem 2rem;
-  color: #1a1a1a;
-
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+/* COMPONENTS */
 .contact-section {
   margin-top: auto;
-  padding-bottom: 0rem;
-}
-
-main ul { 
-  list-style: none;
-  padding: 0;
 }
 
 .contact-links { 
   display: flex;
   gap: 1.5rem;
   margin-top: 0.5rem;
+  list-style: none;
 }
 
 main a { 
-  font-family: monospace;
-  color: #1a1a1a;
+  font-family: var(--font-mono);
+  color: var(--color-text);
   text-decoration: none;
   font-weight: 500;
   transition: opacity 0.2s;
