@@ -79,7 +79,7 @@
   cursor: pointer;
 }
 
-#controls button {
+#btnRand {
   width: calc(100% - var(--s-3) * 2);
   margin: 0.75rem var(--s-3) var(--main-padv);
   padding: 0.35rem;
@@ -93,7 +93,40 @@
   cursor: pointer;
 }
 
-#controls button:hover {
+#btnRand:hover {
   background: var(--black);
   color: var(--white);
+}
+
+/* SWATCH */
+.swatch {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: var(--rule);
+  cursor: pointer;
+  /* background-color set via inline style in JS */
+}
+
+.swatch:hover {
+  filter: invert(1);
+}
+
+/* MODE BUTTON */
+#btnMode {
+  width: auto;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  color: var(--black);
+  cursor: pointer;
+  text-transform: lowercase;
+}
+
+#btnMode:hover {
+  text-decoration: underline;
 }
