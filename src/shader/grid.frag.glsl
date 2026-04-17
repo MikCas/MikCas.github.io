@@ -1,18 +1,27 @@
 #extension GL_OES_standard_derivatives : enable
 precision highp float;
 
+#define PI 3.14159265358979
+
 uniform vec2  uRes;
 uniform float uCell;
 uniform float uSub;
 uniform float uMaxLW;
 uniform float uMinW;
 uniform float uMajW;
-uniform float uMinO;
 uniform float uFade;
 uniform vec3  uBg;
 uniform vec3  uMinC;
 uniform vec3  uMajC;
 uniform vec2  uOff;
+uniform float uMode;
+uniform float uParamA;
+uniform float uParamB;
+
+vec2 rotate(vec2 v, float a) {
+  float s = sin(a), c = cos(a);
+  return vec2(v.x * c - v.y * s, v.x * s + v.y * c);
+}
 
 float pristineGrid(vec2 uv, vec2 lw) {
   vec2 ddx_uv = dFdx(uv);
@@ -28,21 +37,76 @@ float pristineGrid(vec2 uv, vec2 lw) {
 }
 
 void main() {
-  vec2 px = gl_FragCoord.xy - uRes * 0.5 + uOff;
-  vec2 uv = px / uCell;
   float mnW = uMinW * uMaxLW;
   float mjW = uMajW * uMaxLW;
+  vec2 p = gl_FragCoord.xy - uRes * 0.5 + uOff; // centred coordinate
 
-  float minorMask = pristineGrid(uv * uSub, vec2(mnW));
-  float majorMask = pristineGrid(uv, vec2(mjW));
+  float minor = 0.0;
+  float major = 0.0;
 
+  if (uMode < 0.5) {
+    // square — standard orthogonal grid
+    vec2 uv = gl_FragCoord.xy / uCell;
+    minor = pristineGrid(uv * uSub, vec2(mnW));
+    major = pristineGrid(uv,        vec2(mjW));
+
+  } else if (uMode < 1.5) {
+    // rotated — grid rotated around screen centre
+    float angle = (uParamA / 100.0) * PI;
+    vec2 uv = rotate(p, angle) / uCell;
+    minor = pristineGrid(uv * uSub, vec2(mnW));
+    major = pristineGrid(uv,        vec2(mjW));
+
+  } else if (uMode < 2.5) {
+    // moire — two grids at independent angles, take the max
+    float a1 = (uParamA / 100.0) * PI * 0.5;
+    float a2 = (uParamB / 100.0) * PI * 0.5;
+    vec2 uv1 = rotate(p, a1) / uCell;
+    vec2 uv2 = rotate(p, a2) / uCell;
+    minor = max(pristineGrid(uv1 * uSub, vec2(mnW)), pristineGrid(uv2 * uSub, vec2(mnW)));
+    major = max(pristineGrid(uv1,        vec2(mjW)), pristineGrid(uv2,        vec2(mjW)));
+
+  } else if (uMode < 3.5) {
+    // brick — every other row shifted sideways
+    vec2 uv = gl_FragCoord.xy / uCell;
+    uv.x += mod(floor(uv.y), 2.0) * (uParamA / 100.0) * 0.5;
+    minor = pristineGrid(uv * uSub, vec2(mnW));
+    major = pristineGrid(uv,        vec2(mjW));
+
+  } else if (uMode < 4.5) {
+    // polar — concentric rings + radial spokes
+    float r      = length(p) / uCell * (1.0 + (uParamA / 100.0) * 4.0);
+    float spokes = floor((uParamB / 100.0) * 23.0) + 1.0;
+    float theta  = atan(p.y, p.x) / (2.0 * PI) * spokes;
+    vec2 uv = vec2(r, theta);
+    minor = pristineGrid(uv * uSub, vec2(mnW));
+    major = pristineGrid(uv,        vec2(mjW));
+
+  } else if (uMode < 5.5) {
+    // dots — filled circles at each grid cell centre
+    vec2 uv   = gl_FragCoord.xy / uCell;
+    vec2 f    = fract(uv) - 0.5;
+    float radius = 0.05 + (uParamA / 100.0) * 0.40;
+    major = 1.0 - smoothstep(radius - 0.02, radius + 0.02, length(f));
+
+  } else {
+    // waves — sine wave distortion applied to UV
+    float amp  = (uParamA / 100.0) * 80.0;
+    float freq = 0.01 + (uParamB / 100.0) * 0.14;
+    float dx = sin(gl_FragCoord.y * freq) * amp;
+    float dy = sin(gl_FragCoord.x * freq) * amp;
+    vec2 uv = (gl_FragCoord.xy + vec2(dx, dy)) / uCell;
+    minor = pristineGrid(uv * uSub, vec2(mnW));
+    major = pristineGrid(uv,        vec2(mjW));
+  }
+
+  // Colour composition — shared across all modes
   vec3 c = uBg;
-  c = mix(c, uMinC, minorMask * uMinO);
-  c = mix(c, uMajC, majorMask);
+  c = mix(c, uMinC, minor);
+  c = mix(c, uMajC, major);
 
-  float dist = length(px);
-  float fade = 1.0 - smoothstep(0.0, uFade, dist);
-  c = mix(uBg, c, fade);
+  float dist = length(p);
+  c = mix(uBg, c, 1.0 - smoothstep(0.0, uFade, dist));
 
   gl_FragColor = vec4(c, 1.0);
 }
