@@ -69,16 +69,6 @@
   cursor: pointer;
 }
 
-#controls input[type="color"] {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  background: none;
-  border: var(--rule);
-  cursor: pointer;
-}
-
 #btnRand {
   width: calc(100% - var(--s-3) * 2);
   margin: 0.75rem var(--s-3) var(--main-padv);
