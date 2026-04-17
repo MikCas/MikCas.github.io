@@ -39,7 +39,8 @@ export function initGrid(canvas, getParams) {
     const u = {};
     const uniformNames = [
         'uRes','uCell','uSub','uMaxLW','uMinW','uMajW',
-        'uMinO','uFade','uBg','uMinC','uMajC','uOff'
+        'uFade','uBg','uMinC','uMajC','uOff',
+        'uMode','uParamA','uParamB'
     ];
     uniformNames.forEach(name => {
         u[name] = gl.getUniformLocation(prog, name);
@@ -58,12 +59,14 @@ export function initGrid(canvas, getParams) {
         gl.uniform1f (u.uMaxLW, p.maxLW);
         gl.uniform1f (u.uMinW,  p.minW);
         gl.uniform1f (u.uMajW,  p.majW);
-        gl.uniform1f (u.uMinO,  p.minO);
         gl.uniform1f (u.uFade,  p.fade);
         gl.uniform3fv(u.uBg,    p.bg);
         gl.uniform3fv(u.uMinC,  p.minC);
         gl.uniform3fv(u.uMajC,  p.majC);
         gl.uniform2f (u.uOff,   p.off[0], p.off[1]);
+        gl.uniform1f (u.uMode,   p.mode);
+        gl.uniform1f (u.uParamA, p.paramA);
+        gl.uniform1f (u.uParamB, p.paramB);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         requestAnimationFrame(render);
     } 
