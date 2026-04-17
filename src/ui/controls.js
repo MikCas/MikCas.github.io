@@ -1,20 +1,5 @@
 import './controls.css';
 
-const CONTROLS_HTML = `
-<details id="controls" open>
-  <summary>parameters</summary>
-  <div class="row"><label>cell</label><input type="range" id="pCellSize" min="20" max="300" value="80" step="1"><span class="val" id="vCell">80</span></div>
-  <div class="row"><label>subdiv</label><input type="range" id="pSub" min="1" max="12" value="4" step="1"><span class="val" id="vSub">4</span></div>
-  <div class="row"><label>minor w</label><input type="range" id="pMinW" min="0" max="100" value="30" step="1"><span class="val" id="vMinW">30</span></div>
-  <div class="row"><label>major w</label><input type="range" id="pMajW" min="0" max="100" value="50" step="1"><span class="val" id="vMajW">50</span></div>
-  <div class="row"><label>opacity</label><input type="range" id="pMinO" min="0" max="100" value="70" step="1"><span class="val" id="vMinO">70</span></div>
-  <div class="row"><label>bg</label><input type="color" id="cBg" value="#ffffff"></div>
-  <div class="row"><label>minor</label><input type="color" id="cMin" value="#cccccc"></div>
-  <div class="row"><label>major</label><input type="color" id="cMaj" value="#888888"></div>
-  <button id="btnRand">randomize</button>
-</details>
-`;
-
 const hex = (h) => [
   parseInt(h.slice(1,3), 16) / 255,
   parseInt(h.slice(3,5), 16) / 255,
@@ -24,10 +9,7 @@ const $ = (id) => document.getElementById(id);
 const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 const rh = () => '#' + [0,0,0].map(() => ri(40,220).toString(16).padStart(2,'0')).join('');
 
-export function initControls(container) {
-  // BUILD UI
-  container.innerHTML = CONTROLS_HTML;
-
+export function initControls() {
   // NUMBER OF READOUTS IN SYNC WITH THE SLIDER
   const sliders = [
     ['pCellSize', 'vCell'],

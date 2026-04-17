@@ -41,7 +41,18 @@
       </section>
     </main>
 
-    <div id="controls-container"></div>
+    <div id="controls">
+      <header>parameters</header>
+      <div class="row"><label>cell</label><input type="range" id="pCellSize" min="20" max="300" value="80" step="1"><span class="val" id="vCell">80</span></div>
+      <div class="row"><label>subdiv</label><input type="range" id="pSub" min="1" max="12" value="4" step="1"><span class="val" id="vSub">4</span></div>
+      <div class="row"><label>minor w</label><input type="range" id="pMinW" min="0" max="100" value="30" step="1"><span class="val" id="vMinW">30</span></div>
+      <div class="row"><label>major w</label><input type="range" id="pMajW" min="0" max="100" value="50" step="1"><span class="val" id="vMajW">50</span></div>
+      <div class="row"><label>opacity</label><input type="range" id="pMinO" min="0" max="100" value="70" step="1"><span class="val" id="vMinO">70</span></div>
+      <div class="row"><label>bg</label><input type="color" id="cBg" value="#ffffff"></div>
+      <div class="row"><label>minor</label><input type="color" id="cMin" value="#cccccc"></div>
+      <div class="row"><label>major</label><input type="color" id="cMaj" value="#888888"></div>
+      <button id="btnRand">randomize</button>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 

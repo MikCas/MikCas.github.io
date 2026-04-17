@@ -3,8 +3,7 @@ import { initGrid } from './shader/grid.js';
 import { initControls } from './ui/controls.js';
 
 const canvas = document.getElementById('grid');
-const controlsContainer = document.getElementById('controls-container');
 
-const getParams = initControls(controlsContainer);
+const getParams = initControls();
 initGrid(canvas, getParams);
 

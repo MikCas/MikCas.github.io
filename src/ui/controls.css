@@ -2,26 +2,27 @@
 /* CONTROLS */
 #controls {
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: 0;
+  right: 0;
   z-index: 10;
-  max-width: 220px;
-  padding: 0.75rem 1rem;
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-  font-family: monospace;
-  font-size: 11px;
+  max-width: 260px;
+  padding: var(--main-padv) var(--main-padh);
+  background: var(--gray-light);
+  color: var(--black);
+  font-family: var(--mono);
+  font-size: var(--t-xs);
   line-height: 1;
 }
 
-#controls summary {
-  cursor: pointer;
-  user-select: none;
-  font-size: 10px;
-  letter-spacing: 0.15em;
+#controls header {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  color: #555;
+  border-bottom: var(--rule);
+  /* bleed to box edges, matching ul.dir negative-margin pattern */
+  margin: calc(var(--main-padv) * -1) calc(var(--main-padh) * -1) var(--s-2);
+  padding: var(--s-2) var(--s-3);
 }
 
 #controls .row {
@@ -29,6 +30,7 @@
   align-items: center;
   gap: 0.4rem;
   margin-top: 0.5rem;
+  padding: 0 var(--s-3);
 }
 
 #controls label {
@@ -36,7 +38,7 @@
   width: 60px;
   font-size: 10px;
   letter-spacing: 0.04em;
-  color: #555;
+  color: var(--gray);
 }
 
 #controls .val {
@@ -44,7 +46,7 @@
   width: 28px;
   text-align: right;
   font-size: 10px;
-  color: #000;
+  color: var(--black);
 }
 
 #controls input[type="range"] {
@@ -52,8 +54,8 @@
   height: 2px;
   -webkit-appearance: none;
   appearance: none;
-  background: #000;
-  accent-color: #000;
+  background: var(--black);
+  accent-color: var(--black);
   outline: none;
 }
 
@@ -62,7 +64,7 @@
   appearance: none;
   width: 10px;
   height: 10px;
-  background: #000;
+  background: var(--black);
   border: none;
   cursor: pointer;
 }
@@ -73,17 +75,17 @@
   height: 16px;
   padding: 0;
   background: none;
-  border: 1px solid #000;
+  border: var(--rule);
   cursor: pointer;
 }
 
 #controls button {
-  width: 100%;
-  margin-top: 0.75rem;
+  width: calc(100% - var(--s-3) * 2);
+  margin: 0.75rem var(--s-3) var(--main-padv);
   padding: 0.35rem;
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
+  background: var(--white);
+  color: var(--black);
+  border: var(--rule);
   font-family: inherit;
   font-size: 10px;
   letter-spacing: 0.12em;
@@ -92,6 +94,6 @@
 }
 
 #controls button:hover {
-  background: #000;
-  color: #fff;
+  background: var(--black);
+  color: var(--white);
 }
