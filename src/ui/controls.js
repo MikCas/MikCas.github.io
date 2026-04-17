@@ -1,5 +1,25 @@
 import './controls.css';
 
+const PALETTE = [
+  '#000000', // black
+  '#ffffff', // white
+  '#888888', // gray
+  '#ff2200', // red
+  '#00cc44', // green
+  '#0044ff', // blue
+  '#ffdd00', // yellow
+];
+
+const MODES = [
+  { name: 'square',  labelA: null,      labelB: null },
+  { name: 'rotated', labelA: 'angle',   labelB: null },
+  { name: 'moire',   labelA: 'angle 1', labelB: 'angle 2' },
+  { name: 'brick',   labelA: 'offset',  labelB: null },
+  { name: 'polar',   labelA: 'rings',   labelB: 'spokes' },
+  { name: 'dots',    labelA: 'size',    labelB: null },
+  { name: 'waves',   labelA: 'amp',     labelB: 'freq' },
+];
+
 const hex = (h) => [
   parseInt(h.slice(1,3), 16) / 255,
   parseInt(h.slice(3,5), 16) / 255,
@@ -7,52 +27,118 @@ const hex = (h) => [
 ];
 const $ = (id) => document.getElementById(id);
 const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
-const rh = () => '#' + [0,0,0].map(() => ri(40,220).toString(16).padStart(2,'0')).join('');
+
+// --- Swatch state ---
+const swatchIdx = { bg: 1, minor: 2, major: 0 }; // initial: white, gray, black
+
+function applySwatch(slot) {
+  const ids = { bg: 'swBg', minor: 'swMinor', major: 'swMajor' };
+  $(ids[slot]).style.backgroundColor = PALETTE[swatchIdx[slot]];
+}
+
+function cycleSwatch(slot) {
+  swatchIdx[slot] = (swatchIdx[slot] + 1) % PALETTE.length;
+  applySwatch(slot);
+}
+
+// --- Mode state ---
+let modeIndex = 0;
+
+function applyMode() {
+  const m = MODES[modeIndex];
+  $('btnMode').textContent = m.name;
+
+  if (m.labelA) {
+    $('rowA').style.display = '';
+    $('lblA').textContent = m.labelA;
+  } else {
+    $('rowA').style.display = 'none';
+  }
+
+  if (m.labelB) {
+    $('rowB').style.display = '';
+    $('lblB').textContent = m.labelB;
+  } else {
+    $('rowB').style.display = 'none';
+  }
+}
 
 export function initControls() {
-  // NUMBER OF READOUTS IN SYNC WITH THE SLIDER
+  // Init swatches to their initial colours
+  ['bg', 'minor', 'major'].forEach(applySwatch);
+
+  // Swatch click handlers
+  $('swBg').addEventListener('click',    () => cycleSwatch('bg'));
+  $('swMinor').addEventListener('click', () => cycleSwatch('minor'));
+  $('swMajor').addEventListener('click', () => cycleSwatch('major'));
+
+  // Mode button
+  applyMode();
+  $('btnMode').addEventListener('click', () => {
+    modeIndex = (modeIndex + 1) % MODES.length;
+    applyMode();
+  });
+
+  // Slider readout sync
   const sliders = [
     ['pCellSize', 'vCell'],
     ['pSub',      'vSub'],
     ['pMinW',     'vMinW'],
     ['pMajW',     'vMajW'],
-    ['pMinO',     'vMinO'],
+    ['pParamA',   'vParamA'],
+    ['pParamB',   'vParamB'],
   ];
   sliders.forEach(([inputId, valId]) => {
     const input = $(inputId);
-    const val = $(valId);
+    const val   = $(valId);
+    if (!input || !val) return;
     val.textContent = input.value;
     input.addEventListener('input', () => { val.textContent = input.value; });
   });
 
-  // RANDOMISE
+  // Randomize
   $('btnRand').addEventListener('click', () => {
-    $('pCellSize').value = ri(25, 250);
-    $('pSub').value      = ri(1, 10);
+    // Random mode
+    modeIndex = ri(0, MODES.length - 1);
+    applyMode();
+
+    // Random knob values
+    $('pCellSize').value = ri(25, 200);
+    $('pSub').value      = ri(1, 8);
     $('pMinW').value     = ri(5, 80);
     $('pMajW').value     = ri(10, 90);
-    $('pMinO').value     = ri(10, 80);
-    $('cBg').value  = rh();
-    $('cMin').value = rh();
-    $('cMaj').value = rh();
-    // trigger readout update
-    sliders.forEach(([i,v]) => $(v).textContent = $(i).value);
+    $('pParamA').value   = ri(0, 100);
+    $('pParamB').value   = ri(0, 100);
+    sliders.forEach(([i, v]) => { const el = $(v); if (el) el.textContent = $(i).value; });
+
+    // 3 distinct random palette colours (Fisher-Yates on first 3 of shuffled indices)
+    const idxs = Array.from({ length: PALETTE.length }, (_, i) => i);
+    for (let i = 0; i < 3; i++) {
+      const j = i + ri(0, idxs.length - 1 - i);
+      [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
+    }
+    swatchIdx.bg    = idxs[0];
+    swatchIdx.minor = idxs[1];
+    swatchIdx.major = idxs[2];
+    ['bg', 'minor', 'major'].forEach(applySwatch);
   });
 
-  // LIVE GETTER
+  // Live getter — called every frame by grid.js
   return function getParams() {
     return {
-      cell:  +$('pCellSize').value,
-      sub:   +$('pSub').value,
-      maxLW: 0.04,
-      minW:  +$('pMinW').value / 100,
-      majW:  +$('pMajW').value / 100,
-      minO:  +$('pMinO').value / 100,
-      fade:  9999.0,
-      bg:    hex($('cBg').value),
-      minC:  hex($('cMin').value),
-      majC:  hex($('cMaj').value),
-      off:   [0, 0],
+      cell:   +$('pCellSize').value,
+      sub:    +$('pSub').value,
+      maxLW:  0.04,
+      minW:   +$('pMinW').value / 100,
+      majW:   +$('pMajW').value / 100,
+      fade:   9999.0,
+      mode:   modeIndex,
+      paramA: +$('pParamA').value,
+      paramB: +$('pParamB').value,
+      bg:     hex(PALETTE[swatchIdx.bg]),
+      minC:   hex(PALETTE[swatchIdx.minor]),
+      majC:   hex(PALETTE[swatchIdx.major]),
+      off:    [0, 0],
     };
   };
 }
