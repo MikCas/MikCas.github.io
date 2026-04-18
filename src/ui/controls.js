@@ -28,6 +28,43 @@ const hex = (h) => [
 const $ = (id) => document.getElementById(id);
 const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
+// --- Persistence ---
+// Shader params survive link navigation within the same tab so that
+// visitors browsing the site don't see the background jump between pages.
+// A full reload wipes the saved state so each fresh visit starts clean.
+const STORAGE_KEY = 'gridShaderState';
+
+(function clearOnReload() {
+  try {
+    const nav = performance.getEntriesByType('navigation')[0];
+    if (nav && nav.type === 'reload') {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
+  } catch { /* ignore — storage / perf API unavailable */ }
+})();
+
+function loadState() {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function saveState() {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+      modeIndex,
+      cell:   $('pCellSize').value,
+      sub:    $('pSub').value,
+      minW:   $('pMinW').value,
+      majW:   $('pMajW').value,
+      paramA: $('pParamA').value,
+      paramB: $('pParamB').value,
+      swatchIdx: { ...swatchIdx },
+    }));
+  } catch { /* ignore — quota or private mode */ }
+}
+
 // --- Swatch state ---
 const swatchIdx = { bg: 1, minor: 2, major: 0 }; // initial: white, gray, black
 
@@ -69,19 +106,33 @@ export function initControls() {
   // If the controls markup isn't on this page (e.g. project pages), skip wiring.
   if (!$('btnMode')) return null;
 
-  // Init swatches to their initial colours
+  // Restore any persisted state before painting the initial UI
+  const saved = loadState();
+  if (saved) {
+    modeIndex = saved.modeIndex ?? modeIndex;
+    if (saved.cell   != null) $('pCellSize').value = saved.cell;
+    if (saved.sub    != null) $('pSub').value      = saved.sub;
+    if (saved.minW   != null) $('pMinW').value     = saved.minW;
+    if (saved.majW   != null) $('pMajW').value     = saved.majW;
+    if (saved.paramA != null) $('pParamA').value   = saved.paramA;
+    if (saved.paramB != null) $('pParamB').value   = saved.paramB;
+    if (saved.swatchIdx) Object.assign(swatchIdx, saved.swatchIdx);
+  }
+
+  // Init swatches to their (possibly-restored) colours
   ['bg', 'minor', 'major'].forEach(applySwatch);
 
   // Swatch click handlers
-  $('swBg').addEventListener('click',    () => cycleSwatch('bg'));
-  $('swMinor').addEventListener('click', () => cycleSwatch('minor'));
-  $('swMajor').addEventListener('click', () => cycleSwatch('major'));
+  $('swBg').addEventListener('click',    () => { cycleSwatch('bg');    saveState(); });
+  $('swMinor').addEventListener('click', () => { cycleSwatch('minor'); saveState(); });
+  $('swMajor').addEventListener('click', () => { cycleSwatch('major'); saveState(); });
 
   // Mode button
   applyMode();
   $('btnMode').addEventListener('click', () => {
     modeIndex = (modeIndex + 1) % MODES.length;
     applyMode();
+    saveState();
   });
 
   // Slider readout sync
@@ -98,7 +149,10 @@ export function initControls() {
     const val   = $(valId);
     if (!input || !val) return;
     val.textContent = input.value;
-    input.addEventListener('input', () => { val.textContent = input.value; });
+    input.addEventListener('input', () => {
+      val.textContent = input.value;
+      saveState();
+    });
   });
 
   // Randomize
@@ -126,6 +180,8 @@ export function initControls() {
     swatchIdx.minor = idxs[1];
     swatchIdx.major = idxs[2];
     ['bg', 'minor', 'major'].forEach(applySwatch);
+
+    saveState();
   });
 
   // Live getter — called every frame by grid.js
