@@ -5,10 +5,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        home:         resolve(__dirname, 'index.html'),
-        audiovisual:  resolve(__dirname, 'projects/audiovisual.html'),
-        graphics:     resolve(__dirname, 'projects/graphics.html'),
-        sculptures:   resolve(__dirname, 'projects/sculptures.html'),
+        home:          resolve(__dirname, 'index.html'),
+        particleSystem: resolve(__dirname, 'projects/particle-system.html'),
+        raytracer:     resolve(__dirname, 'projects/raytracer.html'),
+        strudelAv:     resolve(__dirname, 'projects/strudel-av.html'),
       },
     },
   },

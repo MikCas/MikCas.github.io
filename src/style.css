@@ -1,23 +1,44 @@
-/* TOKENS*/
+/* TOKENS — canonical design system (see colors_and_type.css) */
 :root {
-  /* color */
-  --black: #000;
-  --white: #fff;
-  --gray: #555;
+  /* color — base */
+  --black:      #000;
+  --white:      #fff;
+  --gray:       #555;
   --gray-light: #ebebeb;
-  --red:        #ff0000;
-  --green:      #00ff00;
-  --blue:       #0000ff;
+
+  /* color — utility RGB primaries (accents only, never as surface) */
+  --red:   #ff0000;
+  --green: #00ff00;
+  --blue:  #0000ff;
+
+  /* color — shader swatch palette (softened primaries) */
+  --shader-red:    #ff2200;
+  --shader-green:  #00cc44;
+  --shader-blue:   #0044ff;
+  --shader-yellow: #ffdd00;
+
+  /* color — semantic aliases */
+  --fg:         var(--black);
+  --fg-muted:   var(--gray);
+  --fg-inverse: var(--white);
+  --bg:         var(--gray-light);
+  --bg-canvas:  var(--white);
+  --bg-inverse: var(--black);
+  --line:       var(--black);
 
   /* type */
   --sans: 'Inter', system-ui, sans-serif;
-  --mono: ui-monospace, Menlo, Consolas, monospace;
+  --mono: ui-monospace, Menlo, Consolas, 'SF Mono', monospace;
   --t-xs: 0.7rem;
   --t-sm: 0.85rem;
   --t-md: 1rem;
   --t-xl: clamp(2rem, 5vw, 3rem);
+
+  /* tracking */
   --track-tight: -0.035em;
-  --track-wide: 0.25em;
+  --track-wide:  0.25em;
+  --track-ui:    0.04em;
+  --track-btn:   0.12em;
 
   /* space */
   --s-1: 0.25rem;
@@ -26,16 +47,17 @@
   --s-4: 1.5rem;
   --s-5: 2rem;
   --s-6: 3rem;
-  
-  /* lines + shadows */
-  --rule: 1px solid #000;
-  --shadow: 10px 10px 0 #000;
+
+  /* lines + shadows + radii */
+  --rule:   1px solid var(--black);
+  --rule-2: 2px solid var(--black);
+  --shadow: 10px 10px 0 var(--black);
+  --radius: 0;
 
   /* layout */
   --main-padh: var(--s-1);
   --main-padv: var(--s-1);
   --col: 320px;
-
 }
 
 /* RESET */
