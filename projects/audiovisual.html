@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Audiovisual — Mikhail Cassar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <canvas id="grid"></canvas>
+    <main>
+      <section class="intro">
+        <p><a class="back" href="/">← back</a></p>
+        <h1>Audiovisual</h1>
+      </section>
+
+      <section class="archive">
+        <ul class="dir">
+          <li><a href="/projects/strudel-av.html"><span class="proj-title">Strudel → TouchDesigner AV System</span><span class="proj-year">2025</span></a></li>
+        </ul>
+      </section>
+    </main>
+
+    <div id="controls">
+      <header>parameters</header>
+      <div class="row"><label>mode</label><button id="btnMode">square</button></div>
+      <div class="row"><label>cell</label><input type="range" id="pCellSize" min="20" max="300" value="80" step="1"><span class="val" id="vCell">80</span></div>
+      <div class="row"><label>subdiv</label><input type="range" id="pSub" min="1" max="12" value="4" step="1"><span class="val" id="vSub">4</span></div>
+      <div class="row"><label>minor w</label><input type="range" id="pMinW" min="0" max="100" value="30" step="1"><span class="val" id="vMinW">30</span></div>
+      <div class="row"><label>major w</label><input type="range" id="pMajW" min="0" max="100" value="50" step="1"><span class="val" id="vMajW">50</span></div>
+      <div class="row placeholder" id="rowA"><label id="lblA">param a</label><input type="range" id="pParamA" min="0" max="100" value="50" step="1"><span class="val" id="vParamA">50</span></div>
+      <div class="row placeholder" id="rowB"><label id="lblB">param b</label><input type="range" id="pParamB" min="0" max="100" value="50" step="1"><span class="val" id="vParamB">50</span></div>
+      <div class="row"><label>bg</label><button class="swatch" id="swBg" style="background-color:#ffffff"></button></div>
+      <div class="row"><label>minor</label><button class="swatch" id="swMinor" style="background-color:#888888"></button></div>
+      <div class="row"><label>major</label><button class="swatch" id="swMajor" style="background-color:#000000"></button></div>
+      <button id="btnRand">randomize</button>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

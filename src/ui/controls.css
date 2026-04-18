@@ -5,14 +5,19 @@
   bottom: 0;
   right: 0;
   z-index: 10;
-  max-width: 260px;
+  width: 260px;          /* fixed — column never resizes between modes */
+  height: 360px;         /* fixed — mode changes never resize the panel */
   padding: var(--main-padv) var(--main-padh);
   background: var(--gray-light);
   color: var(--black);
   font-family: var(--mono);
   font-size: var(--t-xs);
   line-height: 1;
+  box-sizing: border-box;
 }
+
+/* Rows reserved for hidden params keep height constant when empty */
+#controls .row.placeholder { visibility: hidden; }
 
 #controls header {
   font-family: var(--mono);

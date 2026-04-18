@@ -14,7 +14,7 @@ const MODES = [
   { name: 'square',  labelA: null,      labelB: null },
   { name: 'rotated', labelA: 'angle',   labelB: null },
   { name: 'moire',   labelA: 'angle 1', labelB: 'angle 2' },
-  { name: 'brick',   labelA: 'offset',  labelB: null },
+  { name: 'brick',   labelA: 'offset x', labelB: 'offset y' },
   { name: 'polar',   labelA: 'rings',   labelB: 'spokes' },
   { name: 'dots',    labelA: 'size',    labelB: null },
   { name: 'waves',   labelA: 'amp',     labelB: 'freq' },
@@ -48,22 +48,27 @@ function applyMode() {
   const m = MODES[modeIndex];
   $('btnMode').textContent = m.name;
 
+  // Use .placeholder to hide while preserving the row's height — keeps panel size fixed
+  const rowA = $('rowA');
+  const rowB = $('rowB');
   if (m.labelA) {
-    $('rowA').style.display = '';
+    rowA.classList.remove('placeholder');
     $('lblA').textContent = m.labelA;
   } else {
-    $('rowA').style.display = 'none';
+    rowA.classList.add('placeholder');
   }
-
   if (m.labelB) {
-    $('rowB').style.display = '';
+    rowB.classList.remove('placeholder');
     $('lblB').textContent = m.labelB;
   } else {
-    $('rowB').style.display = 'none';
+    rowB.classList.add('placeholder');
   }
 }
 
 export function initControls() {
+  // If the controls markup isn't on this page (e.g. project pages), skip wiring.
+  if (!$('btnMode')) return null;
+
   // Init swatches to their initial colours
   ['bg', 'minor', 'major'].forEach(applySwatch);
 

@@ -91,8 +91,7 @@ canvas#grid {
 main {
   position: relative;
   z-index: 1;
-  width: max-content;
-  max-width: var(--col);
+  width: var(--col);               /* fixed — never resizes between pages */
   min-height: 100vh;
   padding: var(--main-padv) var(--main-padh);
   background: var(--gray-light);
@@ -115,6 +114,15 @@ main a {
 main a:hover {
   background: var(--black);
   color: var(--white);
+}
+
+/* BACK LINK — small, mono, lowercase; sits above the page H1 */
+main a.back {
+  font-family: var(--mono);
+  text-transform: lowercase;
+  letter-spacing: 0;
+  font-size: var(--t-xs);
+  padding: var(--s-1) var(--main-padh);
 }
 
 /* SECTIONS */
@@ -141,12 +149,63 @@ section {
 }
 
 /* ARCHIVE */
-ul.dir { 
-  list-style: none; 
+ul.dir {
+  list-style: none;
   margin: 0 calc(var(--main-padh) * -1);
 }
 ul.dir li { border-bottom: var(--rule); }
 ul.dir li:first-child { border-top: var(--rule); }
+
+/* Directory rows with a trailing year (used on category index pages) */
+ul.dir a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-3);
+}
+.proj-year {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: var(--track-ui);
+  color: var(--gray);
+  text-transform: none;
+}
+ul.dir a:hover .proj-year { color: var(--white); }
+
+/* PROJECT PAGE — two-column layout: info column left, media column right */
+body[data-route="project"] {
+  background: var(--bg);
+}
+body[data-route="project"] main {
+  width: 100%;
+  max-width: none;
+  display: grid;
+  grid-template-columns: var(--col) 1fr;
+  gap: 0;
+  padding: 0;
+  background: transparent;
+}
+.proj-side {
+  background: var(--gray-light);
+  padding: var(--main-padv) var(--main-padh);
+  border-right: var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  min-height: 100vh;
+}
+.proj-media {
+  background: var(--white);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  color: var(--gray);
+  letter-spacing: var(--track-ui);
+  text-transform: lowercase;
+}
 
 /* CONTACT */
 .contact { margin-top: auto; }

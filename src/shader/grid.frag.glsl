@@ -67,9 +67,12 @@ void main() {
     major = max(pristineGrid(uv1,        vec2(mjW)), pristineGrid(uv2,        vec2(mjW)));
 
   } else if (uMode < 3.5) {
-    // brick — every other row shifted sideways
+    // brick — offset x shifts every other row, offset y shifts every other column
     vec2 uv = gl_FragCoord.xy / uCell;
-    uv.x += mod(floor(uv.y), 2.0) * (uParamA / 100.0) * 0.5;
+    float fy = floor(uv.y);
+    float fx = floor(uv.x);
+    uv.x += mod(fy, 2.0) * (uParamA / 100.0) * 0.5;
+    uv.y += mod(fx, 2.0) * (uParamB / 100.0) * 0.5;
     minor = pristineGrid(uv * uSub, vec2(mnW));
     major = pristineGrid(uv,        vec2(mjW));
 
