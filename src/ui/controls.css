@@ -78,9 +78,15 @@
   cursor: pointer;
 }
 
-#btnRand {
-  width: calc(100% - var(--s-3) * 2);
+/* Action buttons (reset + randomize) share a row at the bottom of the panel */
+#controls .btn-row {
+  display: flex;
+  gap: var(--s-2);
   margin: 0.75rem var(--s-3) var(--main-padv);
+}
+
+#controls .btn-row button {
+  flex: 1;
   padding: 0.35rem;
   background: var(--white);
   color: var(--black);
@@ -92,7 +98,7 @@
   cursor: pointer;
 }
 
-#btnRand:hover {
+#controls .btn-row button:hover {
   background: var(--black);
   color: var(--white);
 }

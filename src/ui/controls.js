@@ -65,8 +65,20 @@ function saveState() {
   } catch { /* ignore — quota or private mode */ }
 }
 
+// --- Defaults (single source of truth for reset) ---
+const DEFAULTS = {
+  modeIndex: 0,
+  cell:   80,
+  sub:    4,
+  minW:   30,
+  majW:   50,
+  paramA: 50,
+  paramB: 50,
+  swatchIdx: { bg: 1, minor: 2, major: 0 }, // white, gray, black
+};
+
 // --- Swatch state ---
-const swatchIdx = { bg: 1, minor: 2, major: 0 }; // initial: white, gray, black
+const swatchIdx = { ...DEFAULTS.swatchIdx };
 
 function applySwatch(slot) {
   const ids = { bg: 'swBg', minor: 'swMinor', major: 'swMajor' };
@@ -153,6 +165,24 @@ export function initControls() {
       val.textContent = input.value;
       saveState();
     });
+  });
+
+  // Reset — restore defaults in place and drop any persisted state
+  $('btnReset').addEventListener('click', () => {
+    modeIndex = DEFAULTS.modeIndex;
+    $('pCellSize').value = DEFAULTS.cell;
+    $('pSub').value      = DEFAULTS.sub;
+    $('pMinW').value     = DEFAULTS.minW;
+    $('pMajW').value     = DEFAULTS.majW;
+    $('pParamA').value   = DEFAULTS.paramA;
+    $('pParamB').value   = DEFAULTS.paramB;
+    sliders.forEach(([i, v]) => { const el = $(v); if (el) el.textContent = $(i).value; });
+
+    Object.assign(swatchIdx, DEFAULTS.swatchIdx);
+    ['bg', 'minor', 'major'].forEach(applySwatch);
+
+    applyMode();
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
   });
 
   // Randomize
