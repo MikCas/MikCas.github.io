@@ -82,8 +82,13 @@ h1 {
 
 /* Homepage + category H1s stay on one line — the column is narrow but
    the names/labels are short enough to fit. Project-page H1s (inside
-   .proj-side) are allowed to wrap since titles can be long. */
-main > .intro h1 { white-space: nowrap; }
+   .proj-side) are allowed to wrap since titles can be long.
+   Capped size slightly tighter than --t-xl so "Mikhail Cassar" at the
+   clamp ceiling doesn't overflow the 320px column. */
+main > .intro h1 {
+  white-space: nowrap;
+  font-size: clamp(2rem, 5vw, 2.5rem);
+}
 
 /* LAYOUT */
 canvas#grid {

@@ -10,6 +10,10 @@
   padding: var(--main-padv) var(--main-padh);
   background: var(--gray-light);
   color: var(--black);
+  /* Only the edges that face the shader get a rule — bottom + right are
+     flush against the viewport. */
+  border-top:  var(--rule);
+  border-left: var(--rule);
   font-family: var(--mono);
   font-size: var(--t-xs);
   line-height: 1;
