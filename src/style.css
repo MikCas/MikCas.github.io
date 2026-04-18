@@ -74,11 +74,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1 { 
-  font-size: var(--t-xl); 
-  letter-spacing: var(--track-tight); 
-  line-height: 0.95; 
+h1 {
+  font-size: var(--t-xl);
+  letter-spacing: var(--track-tight);
+  line-height: 0.95;
 }
+
+/* Homepage + category H1s stay on one line — the column is narrow but
+   the names/labels are short enough to fit. Project-page H1s (inside
+   .proj-side) are allowed to wrap since titles can be long. */
+main > .intro h1 { white-space: nowrap; }
 
 /* LAYOUT */
 canvas#grid {
