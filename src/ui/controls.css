@@ -1,29 +1,24 @@
-
 /* CONTROLS */
 #controls {
   position: fixed;
   bottom: 0;
   right: 0;
   z-index: 10;
-  width: 260px;          /* fixed — column never resizes between modes */
-  height: 360px;         /* fixed — mode changes never resize the panel */
+  width: 260px;          
+  height: 360px;       
   padding: var(--main-padv) var(--main-padh);
   background: var(--gray-light);
   color: var(--black);
-  /* Only the edges that face the shader get a rule — bottom + right are
-     flush against the viewport. */
   border-top:  var(--rule);
   border-left: var(--rule);
   font-family: var(--mono);
   font-size: var(--t-xs);
   line-height: 1;
   box-sizing: border-box;
-  /* flex column so the action buttons can float to the bottom edge */
   display: flex;
   flex-direction: column;
 }
 
-/* Rows reserved for hidden params keep height constant when empty */
 #controls .row.placeholder { visibility: hidden; }
 
 #controls header {
@@ -32,7 +27,6 @@
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
   border-bottom: var(--rule);
-  /* bleed to box edges, matching ul.dir negative-margin pattern */
   margin: calc(var(--main-padv) * -1) calc(var(--main-padh) * -1) var(--s-2);
   padding: var(--s-2) var(--s-3);
 }
@@ -81,9 +75,6 @@
   cursor: pointer;
 }
 
-/* Action buttons (randomize + reset) share a row pinned to the bottom of
-   the panel. margin-top: auto pushes the row away from the swatches above,
-   creating a deliberate band of negative space. */
 #controls .btn-row {
   display: flex;
   gap: var(--s-2);
@@ -116,7 +107,6 @@
   padding: 0;
   border: var(--rule);
   cursor: pointer;
-  /* background-color set via inline style in JS */
 }
 
 .swatch:hover {

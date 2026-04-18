@@ -46,8 +46,7 @@ export function initGrid(canvas, getParams) {
         u[name] = gl.getUniformLocation(prog, name);
     });
 
-    function render() {
-        // Resolution sync
+    function render() { 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         gl.viewport(0, 0, canvas.width, canvas.height);

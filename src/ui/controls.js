@@ -28,10 +28,7 @@ const hex = (h) => [
 const $ = (id) => document.getElementById(id);
 const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
-// --- Persistence ---
-// Shader params survive link navigation within the same tab so that
-// visitors browsing the site don't see the background jump between pages.
-// A full reload wipes the saved state so each fresh visit starts clean.
+// Shader parameters persist until site is reloaded
 const STORAGE_KEY = 'gridShaderState';
 
 (function clearOnReload() {
@@ -40,7 +37,7 @@ const STORAGE_KEY = 'gridShaderState';
     if (nav && nav.type === 'reload') {
       sessionStorage.removeItem(STORAGE_KEY);
     }
-  } catch { /* ignore — storage / perf API unavailable */ }
+  } catch { }
 })();
 
 function loadState() {
@@ -62,10 +59,10 @@ function saveState() {
       paramB: $('pParamB').value,
       swatchIdx: { ...swatchIdx },
     }));
-  } catch { /* ignore — quota or private mode */ }
+  } catch { }
 }
 
-// --- Defaults (single source of truth for reset) ---
+// DEFAULTS
 const DEFAULTS = {
   modeIndex: 0,
   cell:   80,
@@ -77,7 +74,7 @@ const DEFAULTS = {
   swatchIdx: { bg: 1, minor: 2, major: 0 }, // white, gray, black
 };
 
-// --- Swatch state ---
+// SWATCH
 const swatchIdx = { ...DEFAULTS.swatchIdx };
 
 function applySwatch(slot) {
@@ -90,14 +87,13 @@ function cycleSwatch(slot) {
   applySwatch(slot);
 }
 
-// --- Mode state ---
+// MODE
 let modeIndex = 0;
 
 function applyMode() {
   const m = MODES[modeIndex];
   $('btnMode').textContent = m.name;
 
-  // Use .placeholder to hide while preserving the row's height — keeps panel size fixed
   const rowA = $('rowA');
   const rowB = $('rowB');
   if (m.labelA) {
@@ -115,10 +111,9 @@ function applyMode() {
 }
 
 export function initControls() {
-  // If the controls markup isn't on this page (e.g. project pages), skip wiring.
+
   if (!$('btnMode')) return null;
 
-  // Restore any persisted state before painting the initial UI
   const saved = loadState();
   if (saved) {
     modeIndex = saved.modeIndex ?? modeIndex;
@@ -131,15 +126,12 @@ export function initControls() {
     if (saved.swatchIdx) Object.assign(swatchIdx, saved.swatchIdx);
   }
 
-  // Init swatches to their (possibly-restored) colours
   ['bg', 'minor', 'major'].forEach(applySwatch);
 
-  // Swatch click handlers
   $('swBg').addEventListener('click',    () => { cycleSwatch('bg');    saveState(); });
   $('swMinor').addEventListener('click', () => { cycleSwatch('minor'); saveState(); });
   $('swMajor').addEventListener('click', () => { cycleSwatch('major'); saveState(); });
 
-  // Mode button
   applyMode();
   $('btnMode').addEventListener('click', () => {
     modeIndex = (modeIndex + 1) % MODES.length;
@@ -147,7 +139,6 @@ export function initControls() {
     saveState();
   });
 
-  // Slider readout sync
   const sliders = [
     ['pCellSize', 'vCell'],
     ['pSub',      'vSub'],
@@ -167,7 +158,6 @@ export function initControls() {
     });
   });
 
-  // Reset — restore defaults in place and drop any persisted state
   $('btnReset').addEventListener('click', () => {
     modeIndex = DEFAULTS.modeIndex;
     $('pCellSize').value = DEFAULTS.cell;
@@ -185,13 +175,11 @@ export function initControls() {
     try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
   });
 
-  // Randomize
+  // RANDOMISE
   $('btnRand').addEventListener('click', () => {
-    // Random mode
     modeIndex = ri(0, MODES.length - 1);
     applyMode();
 
-    // Random knob values
     $('pCellSize').value = ri(25, 200);
     $('pSub').value      = ri(1, 8);
     $('pMinW').value     = ri(5, 80);
@@ -200,7 +188,6 @@ export function initControls() {
     $('pParamB').value   = ri(0, 100);
     sliders.forEach(([i, v]) => { const el = $(v); if (el) el.textContent = $(i).value; });
 
-    // 3 distinct random palette colours (Fisher-Yates on first 3 of shuffled indices)
     const idxs = Array.from({ length: PALETTE.length }, (_, i) => i);
     for (let i = 0; i < 3; i++) {
       const j = i + ri(0, idxs.length - 1 - i);
@@ -214,7 +201,6 @@ export function initControls() {
     saveState();
   });
 
-  // Live getter — called every frame by grid.js
   return function getParams() {
     return {
       cell:   +$('pCellSize').value,
