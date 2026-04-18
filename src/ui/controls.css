@@ -18,6 +18,9 @@
   font-size: var(--t-xs);
   line-height: 1;
   box-sizing: border-box;
+  /* flex column so the action buttons can float to the bottom edge */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Rows reserved for hidden params keep height constant when empty */
@@ -78,11 +81,13 @@
   cursor: pointer;
 }
 
-/* Action buttons (reset + randomize) share a row at the bottom of the panel */
+/* Action buttons (randomize + reset) share a row pinned to the bottom of
+   the panel. margin-top: auto pushes the row away from the swatches above,
+   creating a deliberate band of negative space. */
 #controls .btn-row {
   display: flex;
   gap: var(--s-2);
-  margin: 0.75rem var(--s-3) var(--main-padv);
+  margin: auto var(--s-3) var(--main-padv);
 }
 
 #controls .btn-row button {
