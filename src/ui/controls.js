@@ -28,7 +28,8 @@ const hex = (h) => [
 const $ = (id) => document.getElementById(id);
 const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
-// Shader parameters persist until site is reloaded
+// Shader parameters persist across page navigations within a session, but a
+// full reload resets them — so refreshing feels like a clean slate.
 const STORAGE_KEY = 'gridShaderState';
 
 (function clearOnReload() {
@@ -37,14 +38,14 @@ const STORAGE_KEY = 'gridShaderState';
     if (nav && nav.type === 'reload') {
       sessionStorage.removeItem(STORAGE_KEY);
     }
-  } catch { }
+  } catch (e) { console.warn(e); }
 })();
 
 function loadState() {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+  } catch (e) { console.warn(e); return null; }
 }
 
 function saveState() {
@@ -59,10 +60,9 @@ function saveState() {
       paramB: $('pParamB').value,
       swatchIdx: { ...swatchIdx },
     }));
-  } catch { }
+  } catch (e) { console.warn(e); }
 }
 
-// DEFAULTS
 const DEFAULTS = {
   modeIndex: 0,
   cell:   80,
@@ -74,7 +74,6 @@ const DEFAULTS = {
   swatchIdx: { bg: 1, minor: 2, major: 0 }, // white, gray, black
 };
 
-// SWATCH
 const swatchIdx = { ...DEFAULTS.swatchIdx };
 
 function applySwatch(slot) {
@@ -87,7 +86,6 @@ function cycleSwatch(slot) {
   applySwatch(slot);
 }
 
-// MODE
 let modeIndex = 0;
 
 function applyMode() {
@@ -172,10 +170,9 @@ export function initControls() {
     ['bg', 'minor', 'major'].forEach(applySwatch);
 
     applyMode();
-    try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) { console.warn(e); }
   });
 
-  // RANDOMISE
   $('btnRand').addEventListener('click', () => {
     modeIndex = ri(0, MODES.length - 1);
     applyMode();

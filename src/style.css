@@ -6,11 +6,6 @@
   --gray:       #555;
   --gray-light: #ebebeb;
 
-  /* color — utility RGB primaries (accents only, never as surface) */
-  --red:   #ff0000;
-  --green: #00ff00;
-  --blue:  #0000ff;
-
   /* color — shader swatch palette (softened primaries) */
   --shader-red:    #ff2200;
   --shader-green:  #00cc44;
@@ -48,10 +43,8 @@
   --s-5: 2rem;
   --s-6: 3rem;
 
-  /* lines + shadows + radii */
+  /* lines + radii */
   --rule:   1px solid var(--black);
-  --rule-2: 2px solid var(--black);
-  --shadow: 10px 10px 0 var(--black);
   --radius: 0;
 
   /* layout */
@@ -226,4 +219,24 @@ body[data-route="project"] main {
 .contact a {
   font-size: var(--t-xs);
   padding: var(--s-1) var(--main-padh);
+}
+
+/* MOBILE — stack column full-width, stack project pages single-column */
+@media (max-width: 720px) {
+  body { overflow-x: hidden; }
+
+  main {
+    width: 100%;
+  }
+
+  body[data-route="project"] main {
+    grid-template-columns: 1fr;
+  }
+
+  .proj-side,
+  .proj-media {
+    min-height: auto;
+  }
+
+  .proj-side { border-right: none; border-bottom: var(--rule); }
 }

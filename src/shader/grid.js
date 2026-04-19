@@ -2,11 +2,10 @@ import vsSrc from './grid.vert.glsl?raw';
 import fsSrc from './grid.frag.glsl?raw';
 
 export function initGrid(canvas, getParams) {
-    
-    // SETUP GLSL CONTEXT
+
     const gl = canvas.getContext('webgl', { alpha: false });
     if (!gl) throw new Error('WebGL not supported');
-    gl.getExtension('OES_standard_derivatives'); // Using derivatives for antialiasing
+    gl.getExtension('OES_standard_derivatives');
 
     function compileKernel(source, type) {
         const shader = gl.createShader(type);
@@ -18,24 +17,20 @@ export function initGrid(canvas, getParams) {
         return shader;
     }
 
-    // LINK SHADERS
     const prog = gl.createProgram();
     gl.attachShader(prog, compileKernel(vsSrc, gl.VERTEX_SHADER));
     gl.attachShader(prog, compileKernel(fsSrc, gl.FRAGMENT_SHADER));
     gl.linkProgram(prog);
     gl.useProgram(prog);
 
-    // BUFFERS
     const vbo = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
 
-    // VERTEX
     const aPos = gl.getAttribLocation(prog, 'aPos');
     gl.enableVertexAttribArray(aPos);
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
-    // UNIFORMS
     const u = {};
     const uniformNames = [
         'uRes','uCell','uSub','uMaxLW','uMinW','uMajW',
