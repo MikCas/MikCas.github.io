@@ -200,9 +200,21 @@ body[data-route="project"] main {
 .proj-media {
   background: var(--white);
   min-height: 100vh;
+  padding: var(--s-4);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.proj-media > img,
+.proj-media > video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.proj-media .placeholder {
+  margin: auto;
   font-family: var(--mono);
   font-size: var(--t-xs);
   color: var(--gray);
