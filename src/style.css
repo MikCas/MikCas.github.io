@@ -158,7 +158,6 @@ ul.dir {
 }
 ul.dir li { border-bottom: var(--rule); }
 ul.dir li:first-child { border-top: var(--rule); }
-
 /* Directory rows with a trailing year (used on category index pages) */
 ul.dir a {
   display: flex;
