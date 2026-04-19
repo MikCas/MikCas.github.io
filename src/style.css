@@ -202,12 +202,14 @@ body[data-route="project"] main {
   padding: var(--s-4);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--s-4);
 }
 
 .proj-media > img,
 .proj-media > video {
   width: 100%;
+  max-width: 800px;
   height: auto;
   display: block;
 }
