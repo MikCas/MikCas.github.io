@@ -213,36 +213,50 @@ body[data-route="project"] main {
   min-height: 100vh;
 }
 .proj-media {
-  background: var(--white);
   min-height: 100vh;
   padding: var(--s-4);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--s-4);
+  /* Cap content width on wide desktops so a single image/video
+     doesn't float in a sea of whitespace. The white background still
+     fills the grid column; only inner content is constrained. */
+  max-width: 960px;
+  margin-inline: auto;
+  width: 100%;
 }
 
 .proj-media > img,
-.proj-media > video {
+.proj-media > video,
+.proj-media > .media {
   width: 100%;
   max-width: 800px;
-  height: auto;
   display: block;
 }
 
-.proj-media > div {
-  width: 100%;
-  max-width: 960px;
-}
+.proj-media > img,
+.proj-media > video { height: auto; }
 
-.proj-media .placeholder {
-  margin: auto;
-  font-family: var(--mono);
-  font-size: var(--t-xs);
-  color: var(--gray);
-  letter-spacing: var(--track-ui);
-  text-transform: lowercase;
+/* Unified aspect-ratio wrapper for iframe embeds (Vimeo, YouTube, etc.). */
+.media iframe,
+.media video {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
 }
+.media--1x1  { aspect-ratio: 1 / 1; }
+.media--16x9 { aspect-ratio: 16 / 9; }
+.media--4x3  { aspect-ratio: 4 / 3; }
+
+/* LINKS — directory-style list under the bio, reuses ul.dir aesthetic. */
+ul.links {
+  list-style: none;
+  margin: 0 calc(var(--main-padh) * -1);
+}
+ul.links li { border-bottom: var(--rule); }
+ul.links li:first-child { border-top: var(--rule); }
 
 /* CONTACT */
 .contact { margin-top: auto; }
