@@ -83,6 +83,15 @@ main > .intro h1 {
   font-size: clamp(2rem, 5vw, 2.5rem);
 }
 
+/* Project-page titles: smaller cap so typical two-word titles fit on
+   one line in the 320px sidebar. If a title does wrap, balance the
+   lines and break long words instead of overflowing the column. */
+.proj-side .intro h1 {
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
 /* LAYOUT */
 canvas#grid {
   position: fixed;
