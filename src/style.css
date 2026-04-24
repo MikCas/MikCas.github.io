@@ -50,7 +50,7 @@
   /* layout */
   --main-padh: var(--s-1);
   --main-padv: var(--s-1);
-  --col: 320px;
+  --col: 360px;
 }
 
 /* RESET */
@@ -81,6 +81,15 @@ h1 {
 main > .intro h1 {
   white-space: nowrap;
   font-size: clamp(2rem, 5vw, 2.5rem);
+}
+
+/* Project-page titles: smaller cap so typical two-word titles fit on
+   one line in the 320px sidebar. If a title does wrap, balance the
+   lines and break long words instead of overflowing the column. */
+.proj-side .intro h1 {
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 /* LAYOUT */
@@ -165,6 +174,8 @@ section {
   font-size: var(--t-sm);
   line-height: 1.5;
   color: var(--gray);
+  text-wrap: pretty;
+  hyphens: auto;
 }
 
 /* ARCHIVE */
