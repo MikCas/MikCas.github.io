@@ -174,7 +174,7 @@ section {
   font-size: var(--t-sm);
   line-height: 1.5;
   color: var(--gray);
-  text-wrap: balance;
+  text-wrap: pretty;
   hyphens: auto;
 }
 
