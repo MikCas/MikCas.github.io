@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>PROJECT TITLE — Mikhail Cassar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body data-route="project">
+    <main>
+      <div class="proj-side">
+        <section class="intro">
+          <p><a class="back" href="/projects/CATEGORY.html">← back</a></p>
+          <h1>PROJECT TITLE</h1>
+          <p class="tag">Category</p>
+        </section>
+
+        <section class="about">
+          <p class="bio">Short description here.</p>
+        </section>
+
+        <!-- Optional: delete this block if the project has no external links. -->
+        <ul class="links">
+          <li><a href="https://example.com" target="_blank" rel="noopener">Example</a></li>
+        </ul>
+      </div>
+
+      <!--
+        MEDIA — drop any mix of <img>, <video>, or <div class="media media--RATIO">
+        for iframe embeds. Items stack vertically and are capped at 800px wide.
+        Aspect modifiers: .media--1x1, .media--16x9, .media--4x3.
+      -->
+      <div class="proj-media">
+        <img src="/media/SLUG/01.webp" alt="" loading="lazy">
+        <div class="media media--16x9">
+          <iframe
+            src="https://player.vimeo.com/video/VIDEO_ID?autoplay=1&loop=1"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            title="VIDEO_TITLE"
+          ></iframe>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
