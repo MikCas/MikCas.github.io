@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Raytracer — Mikhail Cassar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body data-route="project">
+    <main>
+      <div class="proj-side">
+        <section class="intro">
+          <p><a class="back" href="/">← back</a></p>
+          <h1>Raytracer</h1>
+          <p class="tag">Graphics</p>
+        </section>
+        <section class="about">
+          <p class="bio">A CPU-based path tracer built from the ground up, initially grounded in Peter Shirley's <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html" target="_blank" rel="noopener">Raytracing in One Weekend</a>. The engine implements ray–object intersections, progressive sampling, depth of field, physically based materials (dielectric, metal, Lambertian), and a modular scene composition system.</p>
+          <p class="bio">The long-term focus is performance: a procedural, data-driven scene system for algorithmically generated environments, and a parallel compute layer to maximise rendering throughput on multi-core hardware.</p>
+        </section>
+
+        <ul class="links">
+          <li><a href="https://github.com/MikCas/MikTracer" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="proj-media"></div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
