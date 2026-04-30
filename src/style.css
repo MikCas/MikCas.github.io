@@ -185,13 +185,14 @@ ul.dir {
 }
 ul.dir li { border-bottom: var(--rule); }
 ul.dir li:first-child { border-top: var(--rule); }
-/* Directory rows with a trailing year (used on category index pages) */
+/* Directory rows: title takes remaining space, type + year sit at the right */
 ul.dir a {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   align-items: baseline;
   gap: var(--s-3);
 }
+.proj-type,
 .proj-year {
   font-family: var(--mono);
   font-size: 10px;
@@ -199,6 +200,8 @@ ul.dir a {
   color: var(--gray);
   text-transform: none;
 }
+.proj-year { min-width: 3ch; text-align: right; }
+ul.dir a:hover .proj-type,
 ul.dir a:hover .proj-year { color: var(--white); }
 
 /* PROJECT PAGE — two-column layout: info column left, media column right */
@@ -222,17 +225,19 @@ body[data-route="project"] main {
   flex-direction: column;
   gap: var(--s-6);
   min-height: 100vh;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 .proj-media {
   min-height: 100vh;
   padding: var(--s-4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: var(--s-4);
-  /* Cap content width on wide desktops so a single image/video
-     doesn't float in a sea of whitespace. The white background still
-     fills the grid column; only inner content is constrained. */
+  align-content: start;
   max-width: 960px;
   margin-inline: auto;
   width: 100%;
@@ -242,12 +247,16 @@ body[data-route="project"] main {
 .proj-media > video,
 .proj-media > .media {
   width: 100%;
-  max-width: 800px;
   display: block;
+  min-width: 0;
 }
 
 .proj-media > img,
 .proj-media > video { height: auto; }
+
+/* Span utilities for composition emphasis */
+.media--feature { grid-column: span 2; }
+.media--full    { grid-column: 1 / -1; }
 
 /* Unified aspect-ratio wrapper for iframe embeds (Vimeo, YouTube, etc.). */
 .media iframe,
@@ -297,5 +306,20 @@ ul.links li:first-child { border-top: var(--rule); }
     min-height: auto;
   }
 
-  .proj-side { border-right: none; border-bottom: var(--rule); }
+  .proj-side {
+    border-right: none;
+    border-bottom: var(--rule);
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .proj-media {
+    grid-template-columns: 1fr;
+  }
+
+  .media--feature,
+  .media--full {
+    grid-column: auto;
+  }
 }
