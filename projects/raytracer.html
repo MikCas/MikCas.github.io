@@ -19,15 +19,19 @@
           <p class="tag">Graphics</p>
         </section>
         <section class="about">
-          <p class="bio">A CPU-based path tracer built from the ground up, initially grounded in Peter Shirley's <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html" target="_blank" rel="noopener">Raytracing in One Weekend</a>. The engine implements ray–object intersections, progressive sampling, depth of field, physically based materials (dielectric, metal, Lambertian), and a modular scene composition system.</p>
-          <p class="bio">The long-term focus is performance: a procedural, data-driven scene system for algorithmically generated environments, and a parallel compute layer to maximise rendering throughput on multi-core hardware.</p>
+          <p class="bio">A path tracing engine initially based on core ideas from Peter Shirley's <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html" target="_blank" rel="noopener">Ray Tracing in One Weekend</a>. It is currently built for CPU architectures, with ray object intersections, progressive sampling, depth of field, physically based materials (Dielectric, Metal, Lambertian), and a modular scene composition system.</p>
+          <p class="bio">The long term goal is an engine centered on performance, with two main tracks: procedural design for data driven, algorithmically generated environments, and parallel compute to maximize rendering speed.</p>
         </section>
 
         <ul class="links">
           <li><a href="https://github.com/MikCas/MikTracer" target="_blank" rel="noopener">GitHub</a></li>
         </ul>
       </div>
-      <div class="proj-media"></div>
+      <div class="proj-media">
+        <img class="media--full" src="/media/renders/blue.png" alt="Blue Render">
+        <img class="media--full" src="/media/renders/green.png" alt="Green Render" width="600" height="337">
+        <img class="media--full" src="/media/renders/red.png" alt="Red Render" width="600" height="337">
+      </div>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>
