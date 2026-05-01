@@ -20,10 +20,13 @@
         </section>
         <section class="about">
           <p class="bio">
-            Realtime pattern visualiser for Strudel in TouchDesigner. Inspired by the pattern diagrams in Making Programming Languages to Dance to* (McLean, 2014).
+            A real-time pattern visualiser and workflow for algorithmic music, that bridges Strudel and TouchDesigner over WebSocket.
           </p>
           <p class="bio">
-            In the codebase, Strudel pattern events are sent over WebSockets into TouchDesigner, parsed into timing/event tables, then used by a GLSL TOP for real-time rendering with envelope-based animation controls. The project is built with GLSL, Python, and JavaScript.
+            Visualising sound depends on how the sound is represented. Using tools like Strudel (a browser-based JavaScript port of TidalCycles), sound can be represented algorithmically i.e music expressed as patterns rather than traditional audio signals. Based on Alex McLean's Making Programming Languages to Dance to (2014), patterns are functions from time to discrete events (Haps) carrying timing, duration, and note information.
+          </p>
+          <p class="bio">
+            I was inspired by the pattern diagrams in McLean's paper, visualisations that show rhythmic structure directly from the pattern used to create music. By connecting Strudel and TouchDesigner over WebSocket, this project recreates those diagrams in real-time.
           </p>
         </section>
 
@@ -31,7 +34,7 @@
           <li><a href="https://github.com/MikCas/strudel-patterns-td" target="_blank" rel="noopener">GitHub</a></li>
           <li><a href="https://strudel.cc" target="_blank" rel="noopener">Strudel</a></li>
           <li><a href="https://derivative.ca/" target="_blank" rel="noopener">TouchDesigner</a></li>
-          <li><a href="https://dl.acm.org/doi/10.1145/2633638.2633647" target="_blank" rel="noopener">Reference Paper</a></li>
+          <li><a href="https://dl.acm.org/doi/10.1145/2633638.2633647" target="_blank" rel="noopener">Making Programming Languages to Dance to (2014)</a></li>
         </ul>
       </div>
 
