@@ -188,9 +188,14 @@ ul.dir li:first-child { border-top: var(--rule); }
 /* Directory rows: title takes remaining space, type + year sit at the right */
 ul.dir a {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
-  gap: var(--s-3);
+  row-gap: var(--s-1);
+  column-gap: var(--s-3);
+}
+.proj-title,
+.proj-type {
+  min-width: 0;
 }
 .proj-type,
 .proj-year {
@@ -199,6 +204,11 @@ ul.dir a {
   letter-spacing: var(--track-ui);
   color: var(--gray);
   text-transform: none;
+}
+.proj-type {
+  line-height: 1.25;
+  grid-column: 1 / -1;
+  text-align: left;
 }
 .proj-year { min-width: 3ch; text-align: right; }
 ul.dir a:hover .proj-type,
