@@ -284,9 +284,19 @@ ul.links li:first-child { border-top: var(--rule); }
   list-style: none; 
   margin: 0 calc(var(--main-padh) * -1);
 }
-.contact a {
+.contact a,
+.contact .contact-email {
+  display: block;
   font-size: var(--t-xs);
   padding: var(--s-1) var(--main-padh);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.contact .contact-email {
+  font-family: var(--sans);
+  color: var(--black);
+  cursor: default;
 }
 
 /* MOBILE — stack column full-width, stack project pages single-column */

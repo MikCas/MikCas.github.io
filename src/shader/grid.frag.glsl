@@ -46,7 +46,7 @@ void main() {
 
   if (uMode < 0.5) {
     // square, standard orthogonal grid
-    vec2 uv = gl_FragCoord.xy / uCell;
+    vec2 uv = (gl_FragCoord.xy - uRes * 0.5) / uCell;
     minor = grid(uv * uSub, vec2(mnW));
     major = grid(uv,        vec2(mjW));
 
@@ -68,7 +68,7 @@ void main() {
 
   } else if (uMode < 3.5) {
     // brick, offset x shifts every other row, offset y shifts every other column
-    vec2 uv = gl_FragCoord.xy / uCell;
+    vec2 uv = (gl_FragCoord.xy - uRes * 0.5) / uCell;
     float fy = floor(uv.y);
     float fx = floor(uv.x);
     uv.x += mod(fy, 2.0) * (uParamA / 100.0) * 0.5;
@@ -87,7 +87,7 @@ void main() {
 
   } else if (uMode < 5.5) {
     // dots, filled circles at each grid cell centre
-    vec2 uv   = gl_FragCoord.xy / uCell;
+    vec2 uv   = (gl_FragCoord.xy - uRes * 0.5) / uCell;
     vec2 f    = fract(uv) - 0.5;
     float radius = 0.05 + (uParamA / 100.0) * 0.40;
     major = 1.0 - smoothstep(radius - 0.02, radius + 0.02, length(f));
@@ -98,7 +98,7 @@ void main() {
     float freq = 0.01 + (uParamB / 100.0) * 0.14;
     float dx = sin(gl_FragCoord.y * freq) * amp;
     float dy = sin(gl_FragCoord.x * freq) * amp;
-    vec2 uv = (gl_FragCoord.xy + vec2(dx, dy)) / uCell;
+    vec2 uv = (gl_FragCoord.xy - uRes * 0.5 + vec2(dx, dy)) / uCell;
     minor = grid(uv * uSub, vec2(mnW));
     major = grid(uv,        vec2(mjW));
   }
