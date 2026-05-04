@@ -307,6 +307,7 @@ ul.links li:first-child { border-top: var(--rule); }
   font-family: var(--sans);
   color: var(--black);
   cursor: default;
+  text-transform: none;
 }
 
 /* MOBILE — stack column full-width, stack project pages single-column */
